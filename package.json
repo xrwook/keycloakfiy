@@ -2,6 +2,7 @@
   "name": "keycloakify-starter",
   "version": "0.0.1",
   "description": "Starter for Keycloakify 11",
+  "packageManager": "pnpm@11.4.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/codegouvfr/keycloakify-starter.git"
@@ -10,8 +11,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "build-theme": "npx keycloakify build && node scripts/copy-jar.mjs",
-    "keycloak": "tsc && vite build && npx keycloakify build && node scripts/copy-jar.mjs",
+    "build-theme": "keycloakify build && node scripts/copy-jar.mjs",
+    "keycloak": "tsc && vite build && keycloakify build && node scripts/copy-jar.mjs",
     "storybook": "storybook dev -p 6006",
     "format": "prettier . --write"
   },
