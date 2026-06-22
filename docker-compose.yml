@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  keycloak:
+    build: .
+    container_name: keycloak-custom
+    environment:
+      # 관리자 계정 설정
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+
+      # 개발 모드 설정
+      KC_DEV_MODE: "true"
+      KC_HTTP_ENABLED: "true"
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+
+      # 로그 설정
+      KC_LOG_LEVEL: INFO
+    ports:
+      - "8081:8080"
+    volumes:
+      # 데이터 저장용 볼륨
+      - keycloak_data:/opt/keycloak/data
+      # 로컬 providers 폴더의 테마 JAR를 Keycloak providers 디렉토리에 자동 마운트
+      - ./providers:/opt/keycloak/providers:ro
+    command: start-dev
+    restart: unless-stopped
+
+volumes:
+  keycloak_data:
