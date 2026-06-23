@@ -1,12 +1,8 @@
 {
-  "name": "keycloakify-starter",
-  "version": "0.0.1",
-  "description": "Starter for Keycloakify 11",
+  "name": "cpo-keycloak-theme",
+  "version": "0.0.0",
+  "description": "CPO Keycloak theme",
   "packageManager": "pnpm@11.4.0",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/codegouvfr/keycloakify-starter.git"
-  },
   "type": "module",
   "scripts": {
     "dev": "vite",
