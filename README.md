@@ -1,6 +1,6 @@
 # CPOS Keycloak Login Theme
 
-Keycloakify를 사용한 커스텀 Keycloak 로그인 테마 프로젝트입니다. React와 TypeScript로 구축되어 있으며, 소셜 로그인 기능과 커스텀 스타일링을 포함합니다.
+Keycloakify를 사용한 커스텀 Keycloak 로그인 테마 프로젝트입니다.
 
 ## 기술 스택
 
@@ -60,28 +60,6 @@ pnpm keycloak
 `providers/cpos-login-theme_v****.jar`
 Keycloak 에 업로드 후 Keycloak 서버를 재시작합니다.
 
-## 프로젝트 구조
-
-```
-src/
-├── component/          # 재사용 가능한 컴포넌트
-│   ├── StyledLogin.tsx
-│   └── StyledTemplate.tsx
-├── images/            # 이미지 리소스
-│   ├── icons-google.png
-│   └── kakao_login_large_wide.png
-├── login/             # 로그인 관련 페이지와 로직
-│   ├── i18n.ts        # 국제화 설정
-│   ├── KcApp.css      # 앱 스타일
-│   ├── KcContext.ts   # Keycloak 컨텍스트
-│   ├── KcPage.tsx     # 메인 페이지 컴포넌트
-│   ├── Template.tsx   # 페이지 템플릿
-│   └── pages/         # 개별 페이지 컴포넌트
-│       └── Login.tsx
-├── kc.gen.tsx         # Keycloak 생성 파일
-└── main.tsx           # 앱 진입점
-```
-
 ## 커스터마이징 가이드
 
 ### 새로운 페이지 추가
@@ -96,12 +74,8 @@ src/
 
 3. `src/login/KcPage.tsx`에서 새로운 페이지를 등록합니다.
 
+4. 스토리북에 새로운 페이지를 추가하려면 다음 명령어를 실행합니다
+
 ```bash
-pnpm exec keycloakify add-story   # Storybook 스토리 추가 명령어
+pnpm exec keycloakify add-story
 ```
-
-### 스타일 수정
-
-- 전역 스타일: `src/login/KcApp.css`
-- 컴포넌트별 스타일: Styled Components 사용
-- 테마 변수: CSS 커스텀 프로퍼티 활용
