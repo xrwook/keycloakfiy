@@ -13,7 +13,7 @@ export default function LoginOtp(props: PageProps<Extract<KcContext, { pageId: "
     classes
   });
 
-  const { otpLogin, url, messagesPerField } = kcContext;
+  const { otpLogin, url, messagesPerField, otpResetActionUrl } = kcContext;
 
   const { msg, msgStr } = i18n;
 
@@ -107,6 +107,24 @@ export default function LoginOtp(props: PageProps<Extract<KcContext, { pageId: "
               value={msgStr("doLogIn")}
               disabled={isSubmitting}
             />
+          </div>
+          <div>
+            {otpResetActionUrl && (
+              <form action={otpResetActionUrl} method="post">
+                <button type="submit">OTP 재설정</button>
+              </form>
+            )}
+
+            <div id="kc-form-buttons" className={kcClsx("kcFormButtonsClass")}>
+              <input
+                className={kcClsx("kcButtonClass", "kcButtonPrimaryClass", "kcButtonBlockClass", "kcButtonLargeClass")}
+                type="submit"
+                value={msgStr("doSubmit")}
+              />
+            </div>
+
+
+
           </div>
         </div>
       </form>

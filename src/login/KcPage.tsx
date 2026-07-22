@@ -15,6 +15,7 @@ const LoginOtp = lazy(() => import("./pages/LoginOtp"));
 const LoginResetPassword = lazy(() => import("./pages/LoginResetPassword"));
 const LoginUpdatePassword = lazy(() => import("./pages/LoginUpdatePassword"));
 const LoginVerifyEmail = lazy(() => import("./pages/LoginVerifyEmail"));
+const Info = lazy(() => import("./pages/Info"));
 
 const doMakeUserConfirmPassword = true;
 
@@ -27,6 +28,14 @@ export default function KcPage(props: { kcContext: KcContext }) {
     <Suspense>
       {(() => {
         switch (kcContext.pageId) {
+          case "info.ftl":
+            return (
+              <Info
+                {...{ kcContext, i18n, classes }}
+                Template={Template}
+                doUseDefaultCss={true}
+              />
+            );
           case "login-verify-email.ftl":
             return (
               <LoginVerifyEmail
