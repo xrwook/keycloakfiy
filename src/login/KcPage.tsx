@@ -4,9 +4,7 @@ import type { KcContext } from "./KcContext";
 import { useI18n } from "./i18n";
 import DefaultPage from "keycloakify/login/DefaultPage";
 import Template from "./Template";
-const UserProfileFormFields = lazy(
-  () => import("./UserProfileFormFields")
-);
+const UserProfileFormFields = lazy(() => import("./UserProfileFormFields"));
 
 const Register = lazy(() => import("./pages/Register"));
 const Error = lazy(() => import("./pages/Error"));
@@ -16,6 +14,7 @@ const LoginResetPassword = lazy(() => import("./pages/LoginResetPassword"));
 const LoginUpdatePassword = lazy(() => import("./pages/LoginUpdatePassword"));
 const LoginVerifyEmail = lazy(() => import("./pages/LoginVerifyEmail"));
 const Info = lazy(() => import("./pages/Info"));
+const LoginResetOtp = lazy(() => import("./pages/LoginResetOtp"));
 
 const doMakeUserConfirmPassword = true;
 
@@ -71,6 +70,14 @@ export default function KcPage(props: { kcContext: KcContext }) {
           case "login-config-totp.ftl":
             return (
               <LoginConfigTotp
+                {...{ kcContext, i18n, classes }}
+                Template={Template}
+                doUseDefaultCss={true}
+              />
+            );
+          case "login-reset-otp.ftl":
+            return (
+              <LoginResetOtp
                 {...{ kcContext, i18n, classes }}
                 Template={Template}
                 doUseDefaultCss={true}
