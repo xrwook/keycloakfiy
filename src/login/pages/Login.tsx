@@ -1,9 +1,10 @@
 import { useState, type ChangeEvent, type CSSProperties } from "react";
 import { Button, Checkbox, Divider, Link, TextField } from "@hae-fe/elements";
+import { kcSanitize } from "keycloakify/lib/kcSanitize";
 import type { PageProps } from "keycloakify/login/pages/PageProps";
 import LoginFooter from "../components/LoginFooter";
 import LoginHeader from "../components/LoginHeader";
-import SystemErrorAlert, { type SystemErrorType } from "../components/SystemErrorAlert";
+import SystemErrorAlert from "../components/SystemErrorAlert";
 import type { KcContext } from "../KcContext";
 import type { I18n } from "../i18n";
 
@@ -40,22 +41,6 @@ const styles: Record<string, CSSProperties> = {
   }
 };
 
-const getSystemError = (message: Extract<KcContext, { pageId: "login.ftl" }>["message"] | undefined): SystemErrorType | null => {
-  if (message === undefined) {
-    return null;
-  }
-
-  if (message.type === "success") {
-    return "resetSuccess";
-  }
-
-  if (message.type === "info") {
-    return "resetEmailSent";
-  }
-
-  return "loginFailed";
-};
-
 export default function Login(props: PageProps<Extract<KcContext, { pageId: "login.ftl" }>, I18n>) {
   const { kcContext, i18n, doUseDefaultCss, Template, classes } = props;
   const { social, realm, url, usernameHidden, login, auth, registrationDisabled, messagesPerField, message } = kcContext;
@@ -67,8 +52,8 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
   const [isLoginButtonDisabled, setIsLoginButtonDisabled] = useState(false);
 
   const hasCredentialError = messagesPerField.existsError("username", "password");
-  const errorMessage = hasCredentialError ? "사번 또는 비밀번호가 일치하지 않습니다." : undefined;
-  const systemError = hasCredentialError ? null : getSystemError(message);
+  const errorMessage = hasCredentialError ? kcSanitize(messagesPerField.getFirstError("username", "password")) : undefined;
+  const systemMessage = hasCredentialError ? undefined : message;
   const socialProviders = realm.password && social?.providers !== undefined ? social.providers : [];
   const isSubmitDisabled = isLoginButtonDisabled || (!usernameHidden && userId.trim() === "") || password.trim() === "";
 
@@ -116,7 +101,7 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
                   }}
                 >
                   <div className="flex flex-col gap-2.5" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                    <SystemErrorAlert systemError={systemError} />
+                    <SystemErrorAlert message={systemMessage} />
 
                     {!usernameHidden && (
                       <TextField

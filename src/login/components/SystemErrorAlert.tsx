@@ -1,4 +1,5 @@
 import { Alert } from "@hae-fe/elements";
+import { kcSanitize } from "keycloakify/lib/kcSanitize";
 
 export type SystemErrorType =
   | "loginFailed"
@@ -10,6 +11,16 @@ export type SystemErrorType =
 interface SystemErrorConfig {
   alertType: "attention" | "information" | "success";
   lines: string[];
+}
+
+interface SystemMessage {
+  type: "success" | "warning" | "error" | "info";
+  summary: string;
+}
+
+interface SystemErrorAlertProps {
+  systemError?: SystemErrorType | null;
+  message?: SystemMessage;
 }
 
 const SYSTEM_ERROR_CONFIG: Record<SystemErrorType, SystemErrorConfig> = {
@@ -38,7 +49,29 @@ const SYSTEM_ERROR_CONFIG: Record<SystemErrorType, SystemErrorConfig> = {
   }
 };
 
-const SystemErrorAlert = ({ systemError }: { systemError: SystemErrorType | null }) => {
+const getAlertType = (
+  messageType: SystemMessage["type"]
+): SystemErrorConfig["alertType"] => {
+  if (messageType === "success") {
+    return "success";
+  }
+
+  if (messageType === "info") {
+    return "information";
+  }
+
+  return "attention";
+};
+
+const SystemErrorAlert = ({ systemError = null, message }: SystemErrorAlertProps) => {
+  if (message !== undefined) {
+    return (
+      <Alert hdsProps={{ type: getAlertType(message.type) }}>
+        <span dangerouslySetInnerHTML={{ __html: kcSanitize(message.summary) }} />
+      </Alert>
+    );
+  }
+
   if (systemError === null) {
     return null;
   }
