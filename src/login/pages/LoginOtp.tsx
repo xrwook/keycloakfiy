@@ -33,7 +33,7 @@ const styles: Record<string, CSSProperties> = {
 
 export default function LoginOtp(props: PageProps<Extract<KcContext, { pageId: "login-otp.ftl" }>, I18n>) {
   const { kcContext, i18n, doUseDefaultCss, Template, classes } = props;
-  const { auth, otpLogin, url, messagesPerField, message, otpResetActionUrl } = kcContext;
+  const { auth, otpLogin, url, messagesPerField, message } = kcContext;
   const otpError = messagesPerField.getFirstError("totp", "otp");
   const hasOtpError = otpError !== undefined;
   const errorMessage = hasOtpError ? kcSanitize(otpError) : undefined;
@@ -52,7 +52,7 @@ export default function LoginOtp(props: PageProps<Extract<KcContext, { pageId: "
           <div style={styles.loginContainer}>
             <LoginHeader title={PAGE_CONFIG.title} userId={auth?.attemptedUsername} description={PAGE_CONFIG.description} />
             <SystemErrorAlert message={systemMessage} />
-            <OtpAuthForm action={url.loginAction} errorMessage={errorMessage} otpResetActionUrl={otpResetActionUrl}>
+            <OtpAuthForm action={url.loginAction} errorMessage={errorMessage}>
               {selectedCredentialId !== undefined && <input type="hidden" name="selectedCredentialId" value={selectedCredentialId} />}
             </OtpAuthForm>
           </div>

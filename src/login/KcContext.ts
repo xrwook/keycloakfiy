@@ -10,9 +10,7 @@ export type KcContextExtension = {
 };
 
 export type KcContextExtensionPerPage = {
-  "login-otp.ftl": {
-    otpResetActionUrl?: string;
-  };
+  "login-otp.ftl": {};
   "info.ftl": {
     resultType?: "otp-reset-email-sent";
     loginUrl?: string;
@@ -20,5 +18,3 @@ export type KcContextExtensionPerPage = {
 };
 
 export type KcContext = ExtendKcContext<KcContextExtension, KcContextExtensionPerPage>;
-
-

@@ -5,7 +5,6 @@ import { useState, type ChangeEvent, type CSSProperties, type ReactNode } from "
 interface OtpAuthFormProps {
   action: string;
   errorMessage?: string;
-  otpResetActionUrl?: string;
   children?: ReactNode;
 }
 
@@ -47,12 +46,7 @@ const styles: Record<string, CSSProperties> = {
   }
 };
 
-const OtpAuthForm = ({
-  action,
-  errorMessage,
-  otpResetActionUrl,
-  children
-}: OtpAuthFormProps) => {
+const OtpAuthForm = ({ action, errorMessage, children }: OtpAuthFormProps) => {
   const [otpValue, setOtpValue] = useState("");
   const [, setOtpSubmitted] = useState(false);
   const showError = errorMessage !== undefined;
@@ -68,10 +62,6 @@ const OtpAuthForm = ({
   };
 
   const handleOtpResetClick = (event: { preventDefault: () => void }) => {
-    if (otpResetActionUrl === undefined) {
-      return;
-    }
-
     event.preventDefault();
     document.getElementById("kc-otp-reset-button")?.click();
   };
@@ -156,24 +146,23 @@ const OtpAuthForm = ({
             </p>
             <Link
               size="medium"
-              href={otpResetActionUrl ?? "#"}
+              href="#"
               onClick={handleOtpResetClick}
               className="color-(--color-light-link-default)"
               style={styles.resetLink}
             >
               OTP 재설정하기
             </Link>
-            {otpResetActionUrl !== undefined && (
-              <button
-                id="kc-otp-reset-button"
-                type="submit"
-                formAction={otpResetActionUrl}
-                formMethod="post"
-                style={{ display: "none" }}
-                tabIndex={-1}
-                aria-hidden="true"
-              />
-            )}
+            <button
+              id="kc-otp-reset-button"
+              name="reset-otp"
+              value="true"
+              type="submit"
+              formNoValidate
+              style={{ display: "none" }}
+              tabIndex={-1}
+              aria-hidden="true"
+            />
           </div>
         </div>
       </div>
