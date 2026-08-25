@@ -1,0 +1,281 @@
+{
+  "source": {
+    "type": "partial-export-screenshot-summary",
+    "purpose": "Keycloakify login/register screen development reference",
+    "completeRealmImport": false,
+    "note": "This file contains only the visible and screen-relevant realm settings from the provided screenshots. Use the original Keycloak partial export JSON for import or exact environment reproduction."
+  },
+  "realm": {
+    "id": "4c6939e5-f72c-4b9c-bbc9-45252c3ce660",
+    "realm": "ecmp",
+    "enabled": true,
+    "sslRequired": "external",
+    "defaultSignatureAlgorithm": "RS256",
+    "registrationAllowed": true,
+    "registrationEmailAsUsername": true,
+    "rememberMe": false,
+    "verifyEmail": true,
+    "loginWithEmailAllowed": true,
+    "duplicateEmailsAllowed": false,
+    "resetPasswordAllowed": true,
+    "editUsernameAllowed": false,
+    "bruteForceProtected": true,
+    "permanentLockout": false,
+    "accessTokenLifespan": 300,
+    "accessTokenLifespanForImplicitFlow": 900,
+    "ssoSessionIdleTimeout": 1200,
+    "ssoSessionMaxLifespan": 86400,
+    "ssoSessionIdleTimeoutRememberMe": 0,
+    "ssoSessionMaxLifespanRememberMe": 0,
+    "offlineSessionIdleTimeout": 2592000,
+    "clientSessionIdleTimeout": 0,
+    "clientSessionMaxLifespan": 0,
+    "internationalizationEnabled": true,
+    "supportedLocales": ["ko"],
+    "defaultLocale": "ko",
+    "loginTheme": "keycloak.v2",
+    "keycloakVersion": "26.3.3"
+  },
+  "flows": {
+    "browserFlow": "browser",
+    "registrationFlow": "registration",
+    "directGrantFlow": "direct grant",
+    "resetCredentialsFlow": "reset credentials",
+    "clientAuthenticationFlow": "clients",
+    "dockerAuthenticationFlow": "docker auth",
+    "firstBrokerLoginFlow": "first broker login"
+  },
+  "otpPolicy": {
+    "type": "totp",
+    "algorithm": "HmacSHA1",
+    "initialCounter": 0,
+    "digits": 6,
+    "lookAheadWindow": 1,
+    "period": 30,
+    "codeReusable": false,
+    "supportedApplications": ["totpAppFreeOTPName", "totpAppGoogleName", "totpAppMicrosoftAuthenticatorName"]
+  },
+  "requiredActions": [
+    {
+      "alias": "CONFIGURE_TOTP",
+      "name": "Configure OTP",
+      "enabled": true,
+      "defaultAction": false,
+      "priority": 10
+    },
+    {
+      "alias": "TERMS_AND_CONDITIONS",
+      "name": "Terms and Conditions",
+      "enabled": true,
+      "defaultAction": true,
+      "priority": 20
+    },
+    {
+      "alias": "UPDATE_PASSWORD",
+      "name": "Update Password",
+      "enabled": true,
+      "defaultAction": false,
+      "priority": 30
+    },
+    {
+      "alias": "UPDATE_PROFILE",
+      "name": "Update Profile",
+      "enabled": true,
+      "defaultAction": false,
+      "priority": 40
+    },
+    {
+      "alias": "VERIFY_EMAIL",
+      "name": "Verify Email",
+      "enabled": true,
+      "defaultAction": false,
+      "priority": 50
+    },
+    {
+      "alias": "delete_account",
+      "name": "Delete Account",
+      "enabled": false,
+      "defaultAction": false,
+      "priority": 60
+    },
+    {
+      "alias": "webauthn-register",
+      "name": "Webauthn Register",
+      "enabled": false,
+      "defaultAction": false,
+      "priority": 70
+    },
+    {
+      "alias": "webauthn-register-passwordless",
+      "name": "Webauthn Register Passwordless",
+      "enabled": false,
+      "defaultAction": false,
+      "priority": 80
+    },
+    {
+      "alias": "VERIFY_PROFILE",
+      "name": "Verify Profile",
+      "enabled": true,
+      "defaultAction": false,
+      "priority": 90
+    },
+    {
+      "alias": "delete_credential",
+      "name": "Delete Credential",
+      "enabled": true,
+      "defaultAction": false,
+      "priority": 100
+    },
+    {
+      "alias": "idp_link",
+      "name": "Linking Identity Provider",
+      "enabled": true,
+      "defaultAction": false,
+      "priority": 1000
+    },
+    {
+      "alias": "update_user_locale",
+      "name": "Update User Locale",
+      "enabled": true,
+      "defaultAction": false,
+      "priority": 1000
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "hmg-sso",
+      "name": "hmg-sso",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "implicitFlowEnabled": false,
+      "frontchannelLogout": true,
+      "rootUrl": "https://dscportal.hmg-corp.io/SPI/sso/HENG/oidc",
+      "baseUrl": "https://dscportal.hmg-corp.io/SPI/sso/HENG/oidc",
+      "adminUrl": "https://dscportal.hmg-corp.io/SPI/sso/HENG/oidc",
+      "redirectUris": ["https://dscportal.hmg-corp.io/SPI/sso/HENG/oidc/callback"],
+      "webOrigins": ["https://dscportal.hmg-corp.io"],
+      "secret": "**********"
+    }
+  ],
+  "identityProviders": [
+    {
+      "alias": "oidc",
+      "displayName": "hmg-sso",
+      "providerId": "oidc",
+      "enabled": true,
+      "trustEmail": false,
+      "storeToken": false,
+      "addReadTokenRoleOnCreate": false,
+      "authenticateByDefault": false,
+      "linkOnly": false,
+      "hideOnLogin": false,
+      "config": {
+        "issuer": "https://dscportal.hmg-corp.io/SPI",
+        "authorizationUrl": "https://dscportal.hmg-corp.io/SPI/sso/HENG/oidc/authorize",
+        "tokenUrl": "https://dscportal.hmg-corp.io/SPI/sso/HENG/oidc/token",
+        "logoutUrl": "https://dscportal.hmg-corp.io/SPI/sso/HENG/oidc/logout",
+        "clientAuthMethod": "client_secret_post",
+        "clientId": "USER_AUTHENTICATION",
+        "clientSecret": "**********",
+        "useJwksUrl": "true",
+        "syncMode": "IMPORT"
+      }
+    }
+  ],
+  "userProfile": {
+    "registrationFields": [
+      {
+        "name": "company",
+        "displayName": "${profile.attributes.company}",
+        "requiredForRoles": ["admin", "user"],
+        "permissions": {
+          "view": ["admin", "user"],
+          "edit": ["admin", "user"]
+        }
+      },
+      {
+        "name": "department",
+        "displayName": "${profile.attributes.department}",
+        "requiredForRoles": ["admin", "user"],
+        "permissions": {
+          "view": ["admin", "user"],
+          "edit": ["admin", "user"]
+        }
+      },
+      {
+        "name": "name",
+        "displayName": "${profile.attributes.name}",
+        "requiredForRoles": ["admin", "user"],
+        "permissions": {
+          "view": ["admin", "user"],
+          "edit": ["admin", "user"]
+        }
+      },
+      {
+        "name": "email",
+        "displayName": "${email}",
+        "requiredForRoles": ["user"],
+        "validations": {
+          "email": {},
+          "length": {
+            "max": 255
+          },
+          "username-prohibited-characters": {},
+          "up-username-not-idn-homograph": {}
+        }
+      },
+      {
+        "name": "username",
+        "displayName": "${username}",
+        "requiredForRoles": ["user"]
+      },
+      {
+        "name": "phoneNumber",
+        "displayName": "${profile.attributes.phoneNumber}"
+      }
+    ],
+    "localization": {
+      "ko": {
+        "profile.attributes.company": "회사",
+        "profile.attributes.department": "부서",
+        "profile.attributes.name": "이름",
+        "profile.attributes.phoneNumber": "전화번호"
+      },
+      "en": {
+        "profile.attributes.company": "Company",
+        "profile.attributes.department": "Department",
+        "profile.attributes.name": "Name",
+        "profile.attributes.phoneNumber": "Phone Number"
+      }
+    }
+  },
+  "screenDevelopmentNotes": {
+    "login": {
+      "registrationLinkVisibleWhen": "realm.registrationAllowed === true",
+      "forgotPasswordVisibleWhen": "realm.resetPasswordAllowed === true",
+      "rememberMeVisibleWhen": "realm.rememberMe === true"
+    },
+    "register": {
+      "emailAsUsername": true,
+      "verifyEmailAfterRegistration": true,
+      "expectedFieldsFromUserProfile": ["company", "department", "name", "email", "username", "phoneNumber"]
+    },
+    "otp": {
+      "configureTotpRequiredActionEnabled": true,
+      "loginOtpResetSubmit": {
+        "formId": "kc-otp-login-form",
+        "button": {
+          "name": "reset-otp",
+          "value": "true",
+          "type": "submit",
+          "formnovalidate": true
+        }
+      }
+    }
+  }
+}

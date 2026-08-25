@@ -50,29 +50,19 @@ const TotpAuthForm = ({
   children
 }: TotpAuthFormProps) => {
   const [otpValue, setOtpValue] = useState("");
-  const [, setOtpSubmitted] = useState(false);
-  const showError = errorMessage !== undefined;
+  const normalizedErrorMessage = errorMessage?.trim() ? errorMessage : undefined;
+  const showError = normalizedErrorMessage !== undefined;
 
   const handleOtpValueChange = (event: ChangeEvent<HTMLInputElement>) => {
     setOtpValue(event.target.value);
-    setOtpSubmitted(false);
   };
 
   const handleClearOtpValue = () => {
     setOtpValue("");
-    setOtpSubmitted(false);
   };
 
   return (
-    <form
-      id="kc-totp-settings-form"
-      action={action}
-      method="post"
-      onSubmit={() => {
-        setOtpSubmitted(true);
-        return true;
-      }}
-    >
+    <form id="kc-totp-settings-form" action={action} method="post">
       {children}
       <div className="w-full text-center" style={styles.fullCenter}>
         <div className="flex w-full flex-col items-center gap-4" style={styles.column}>
@@ -107,7 +97,7 @@ const TotpAuthForm = ({
               hdsProps={{
                 clearable: true,
                 size: "xlarge",
-                helpText: errorMessage
+                helpText: normalizedErrorMessage
               }}
               onClear={handleClearOtpValue}
               error={showError}
