@@ -6,8 +6,20 @@ import { getKcContextMock } from "./login/KcPageStory";
 
 if (import.meta.env.DEV) {
   window.kcContext = getKcContextMock({
-    pageId: "register.ftl",
-    overrides: {}
+    pageId: "login.ftl",
+    overrides: {
+      social: {
+        displayInfo: true,
+        providers: [
+          {
+            loginUrl: "#",
+            alias: "hyundai-engineering",
+            providerId: "oidc",
+            displayName: "현대엔지니어링 SSO 로그인"
+          }
+        ]
+      }
+    }
   });
 }
 

@@ -1,250 +1,224 @@
-/**
- * Combined Username + Password login page (login.ftl) with optional WebAuthn passkey support.
- * Renders standard login form plus conditional passkey authenticator section.
- */
-import type { JSX } from "keycloakify/tools/JSX";
-import { useState } from "react";
-import { kcSanitize } from "keycloakify/lib/kcSanitize";
-import { useIsPasswordRevealed } from "keycloakify/tools/useIsPasswordRevealed";
-import { clsx } from "keycloakify/tools/clsx";
+import { useState, type ChangeEvent, type CSSProperties } from "react";
+import { Button, Checkbox, Divider, Link, TextField } from "@hae-fe/elements";
 import type { PageProps } from "keycloakify/login/pages/PageProps";
-import { getKcClsx, type KcClsx } from "keycloakify/login/lib/kcClsx";
+import LoginFooter from "../components/LoginFooter";
+import LoginHeader from "../components/LoginHeader";
+import SystemErrorAlert, { type SystemErrorType } from "../components/SystemErrorAlert";
 import type { KcContext } from "../KcContext";
 import type { I18n } from "../i18n";
-import { useScript } from "keycloakify/login/pages/Login.useScript";
+
+type LoginPageType = "login";
+
+interface PageConfig {
+  title: string;
+  description: string;
+}
+
+const PAGE_CONFIG: Record<LoginPageType, PageConfig> = {
+  login: {
+    title: "로그인",
+    description: "로그인 정보를 입력해 주세요."
+  }
+};
+
+const styles: Record<string, CSSProperties> = {
+  loginWrapper: {
+    width: 480,
+    margin: "0 auto",
+    display: "flex",
+    flexDirection: "column",
+    gap: 20
+  },
+  loginContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 48,
+    padding: 28,
+    borderRadius: "var(--radius-8)",
+    backgroundColor: "var(--color-light-surface-white)",
+    boxShadow: "0 1px 4px 0 var(--color-light-alpha-shadow1), 0 2px 6px 0 var(--color-light-alpha-shadow2)"
+  }
+};
+
+const getSystemError = (message: Extract<KcContext, { pageId: "login.ftl" }>["message"] | undefined): SystemErrorType | null => {
+  if (message === undefined) {
+    return null;
+  }
+
+  if (message.type === "success") {
+    return "resetSuccess";
+  }
+
+  if (message.type === "info") {
+    return "resetEmailSent";
+  }
+
+  return "loginFailed";
+};
 
 export default function Login(props: PageProps<Extract<KcContext, { pageId: "login.ftl" }>, I18n>) {
   const { kcContext, i18n, doUseDefaultCss, Template, classes } = props;
+  const { social, realm, url, usernameHidden, login, auth, registrationDisabled, messagesPerField, message } = kcContext;
 
-  const { kcClsx } = getKcClsx({
-    doUseDefaultCss,
-    classes
-  });
-
-  const { social, realm, url, usernameHidden, login, auth, registrationDisabled, messagesPerField, enableWebAuthnConditionalUI, authenticators } =
-    kcContext;
-
-  const { msg, msgStr } = i18n;
-
+  const { title, description } = PAGE_CONFIG.login;
+  const [userId, setUserId] = useState(login.username ?? "");
+  const [password, setPassword] = useState("");
+  const [rememberUserId, setRememberUserId] = useState(!!login.rememberMe);
   const [isLoginButtonDisabled, setIsLoginButtonDisabled] = useState(false);
 
-  const webAuthnButtonId = "authenticateWebAuthnButton";
+  const hasCredentialError = messagesPerField.existsError("username", "password");
+  const errorMessage = hasCredentialError ? "사번 또는 비밀번호가 일치하지 않습니다." : undefined;
+  const systemError = hasCredentialError ? null : getSystemError(message);
+  const socialProviders = realm.password && social?.providers !== undefined ? social.providers : [];
+  const isSubmitDisabled = isLoginButtonDisabled || (!usernameHidden && userId.trim() === "") || password.trim() === "";
 
-  useScript({
-    webAuthnButtonId,
-    kcContext,
-    i18n
-  });
+  const handleUserIdChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setUserId(event.target.value);
+  };
+
+  const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+  };
+
+  const handleClearUserId = () => {
+    setUserId("");
+  };
+
+  const handleClearPassword = () => {
+    setPassword("");
+  };
+
+  const handleRememberChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setRememberUserId(event.target.checked);
+  };
 
   return (
-    <Template
-      kcContext={kcContext}
-      i18n={i18n}
-      doUseDefaultCss={doUseDefaultCss}
-      classes={classes}
-      displayMessage={!messagesPerField.existsError("username", "password")}
-      headerNode={'msg("loginAccountTitle")asdasdasd'}
-      displayInfo={realm.password && realm.registrationAllowed && !registrationDisabled}
-      infoNode={
-        <div id="kc-registration-container">
-          <div id="kc-registration">
-            <span>
-              {msg("noAccount")}{" "}
-              <a tabIndex={8} href={url.registrationUrl}>
-                {msg("doRegister")}
-              </a>
-            </span>
+    <Template kcContext={kcContext} i18n={i18n} doUseDefaultCss={doUseDefaultCss} classes={classes} displayMessage={false} headerNode={null}>
+      <div
+        style={{
+          padding: "80px 0",
+          backgroundColor: "var(--color-light-background-neutral-weakest)"
+        }}
+      >
+        <div style={styles.loginWrapper}>
+          <div style={styles.loginContainer}>
+            <LoginHeader title={title} userId={usernameHidden ? auth.attemptedUsername : undefined} description={description} />
+
+            <div>
+              {realm.password && (
+                <form
+                  id="kc-form-login"
+                  action={url.loginAction}
+                  method="post"
+                  onSubmit={() => {
+                    setIsLoginButtonDisabled(true);
+                    return true;
+                  }}
+                >
+                  <div className="flex flex-col gap-2.5" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    <SystemErrorAlert systemError={systemError} />
+
+                    {!usernameHidden && (
+                      <TextField
+                        id="username"
+                        name="username"
+                        placeholder="이메일 ID를 입력해 주세요."
+                        value={userId}
+                        onChange={handleUserIdChange}
+                        error={hasCredentialError}
+                        autoFocus
+                        autoComplete="username"
+                        hdsProps={{ clearable: true, size: "xlarge" }}
+                        onClear={handleClearUserId}
+                      />
+                    )}
+                    <TextField
+                      id="password"
+                      name="password"
+                      placeholder="비밀번호를 입력해 주세요."
+                      type="password"
+                      value={password}
+                      onChange={handlePasswordChange}
+                      error={hasCredentialError}
+                      autoComplete="current-password"
+                      hdsProps={{
+                        clearable: true,
+                        size: "xlarge",
+                        helpText: errorMessage
+                      }}
+                      onClear={handleClearPassword}
+                    />
+                  </div>
+
+                  <div
+                    className="mt-2.5 flex items-center justify-between"
+                    style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 10 }}
+                  >
+                    <div id="kc-form-options">
+                      {realm.rememberMe && !usernameHidden && (
+                        <>
+                          {rememberUserId && <input type="hidden" name="rememberMe" value="on" />}
+                          <Checkbox label="아이디 저장" checked={rememberUserId} onChange={handleRememberChange} />
+                        </>
+                      )}
+                    </div>
+                    {realm.resetPasswordAllowed && (
+                      <Link size="medium" href={url.loginResetCredentialsUrl}>
+                        비밀번호를 잊으셨나요?
+                      </Link>
+                    )}
+                  </div>
+
+                  <div id="kc-form-buttons" className="mt-12" style={{ marginTop: 48 }}>
+                    <input type="hidden" id="id-hidden-input" name="credentialId" value={auth.selectedCredential} />
+                    <Button
+                      disabled={isSubmitDisabled}
+                      type="submit"
+                      name="login"
+                      id="kc-login"
+                      value="로그인"
+                      size="xlarge"
+                      semantic="brand"
+                      styleOption="fill"
+                      style={{ width: "100%" }}
+                    >
+                      로그인
+                    </Button>
+                    {socialProviders.length > 0 && (
+                      <>
+                        <Divider className="my-2.5" style={{ margin: "10px 0" }}>
+                          또는
+                        </Divider>
+                        {socialProviders.map(provider => (
+                          <Button
+                            key={provider.alias}
+                            id={`social-${provider.alias}`}
+                            type="button"
+                            size="xlarge"
+                            semantic="brand"
+                            styleOption="outline"
+                            className="w-full"
+                            style={{ width: "100%" }}
+                            onClick={() => {
+                              window.location.href = provider.loginUrl;
+                            }}
+                          >
+                            {provider.displayName}
+                          </Button>
+                        ))}
+                      </>
+                    )}
+                  </div>
+                </form>
+              )}
+            </div>
+
+            {realm.password && realm.registrationAllowed && !registrationDisabled && (
+              <LoginFooter type="login" registrationUrl={url.registrationUrl} />
+            )}
           </div>
         </div>
-      }
-      socialProvidersNode={
-        <>
-          {realm.password && social?.providers !== undefined && social.providers.length !== 0 && (
-            <div id="kc-social-providers" className={kcClsx("kcFormSocialAccountSectionClass")}>
-              <hr />
-              <h2>{msg("identity-provider-login-label")}</h2>
-              <ul className={kcClsx("kcFormSocialAccountListClass", social.providers.length > 3 && "kcFormSocialAccountListGridClass")}>
-                {social.providers.map((...[p, , providers]) => (
-                  <li key={p.alias}>
-                    <a
-                      id={`social-${p.alias}`}
-                      className={kcClsx("kcFormSocialAccountListButtonClass", providers.length > 3 && "kcFormSocialAccountGridItem")}
-                      type="button"
-                      href={p.loginUrl}
-                    >
-                      {p.iconClasses && <i className={clsx(kcClsx("kcCommonLogoIdP"), p.iconClasses)} aria-hidden="true"></i>}
-                      <span
-                        className={clsx(kcClsx("kcFormSocialAccountNameClass"), p.iconClasses && "kc-social-icon-text")}
-                        dangerouslySetInnerHTML={{ __html: kcSanitize(p.displayName) }}
-                      ></span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </>
-      }
-    >
-      <div id="kc-form">
-        <div id="kc-form-wrapper">
-          {realm.password && (
-            <form
-              id="kc-form-login"
-              onSubmit={() => {
-                setIsLoginButtonDisabled(true);
-                return true;
-              }}
-              action={url.loginAction}
-              method="post"
-            >
-              {!usernameHidden && (
-                <div className={kcClsx("kcFormGroupClass")}>
-                  <label htmlFor="username" className={kcClsx("kcLabelClass")}>
-                    {!realm.loginWithEmailAllowed ? msg("username") : !realm.registrationEmailAsUsername ? msg("usernameOrEmail") : msg("email")}
-                  </label>
-                  <input
-                    tabIndex={2}
-                    id="username"
-                    className={kcClsx("kcInputClass")}
-                    name="username"
-                    defaultValue={login.username ?? ""}
-                    type="text"
-                    autoFocus
-                    autoComplete={enableWebAuthnConditionalUI ? "username webauthn" : "username"}
-                    aria-invalid={messagesPerField.existsError("username", "password")}
-                  />
-                  {messagesPerField.existsError("username", "password") && (
-                    <span
-                      id="input-error"
-                      className={kcClsx("kcInputErrorMessageClass")}
-                      aria-live="polite"
-                      dangerouslySetInnerHTML={{
-                        __html: kcSanitize(messagesPerField.getFirstError("username", "password"))
-                      }}
-                    />
-                  )}
-                </div>
-              )}
-
-              <div className={kcClsx("kcFormGroupClass")}>
-                <label htmlFor="password" className={kcClsx("kcLabelClass")}>
-                  {msg("password")}
-                </label>
-                <PasswordWrapper kcClsx={kcClsx} i18n={i18n} passwordInputId="password">
-                  <input
-                    tabIndex={3}
-                    id="password"
-                    className={kcClsx("kcInputClass")}
-                    name="password"
-                    type="password"
-                    autoComplete="current-password"
-                    aria-invalid={messagesPerField.existsError("username", "password")}
-                  />
-                </PasswordWrapper>
-                {usernameHidden && messagesPerField.existsError("username", "password") && (
-                  <span
-                    id="input-error"
-                    className={kcClsx("kcInputErrorMessageClass")}
-                    aria-live="polite"
-                    dangerouslySetInnerHTML={{
-                      __html: kcSanitize(messagesPerField.getFirstError("username", "password"))
-                    }}
-                  />
-                )}
-              </div>
-
-              <div className={kcClsx("kcFormGroupClass", "kcFormSettingClass")}>
-                <div id="kc-form-options">
-                  {realm.rememberMe && !usernameHidden && (
-                    <div className="checkbox">
-                      <label>
-                        <input tabIndex={5} id="rememberMe" name="rememberMe" type="checkbox" defaultChecked={!!login.rememberMe} />{" "}
-                        {msg("rememberMe")}
-                      </label>
-                    </div>
-                  )}
-                </div>
-                <div className={kcClsx("kcFormOptionsWrapperClass")}>
-                  {realm.resetPasswordAllowed && (
-                    <span>
-                      <a tabIndex={6} href={url.loginResetCredentialsUrl}>
-                        {msg("doForgotPassword")}
-                      </a>
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              <div id="kc-form-buttons" className={kcClsx("kcFormGroupClass")}>
-                <input type="hidden" id="id-hidden-input" name="credentialId" value={auth.selectedCredential} />
-                <input
-                  tabIndex={7}
-                  disabled={isLoginButtonDisabled}
-                  className={kcClsx("kcButtonClass", "kcButtonPrimaryClass", "kcButtonBlockClass", "kcButtonLargeClass")}
-                  name="login"
-                  id="kc-login"
-                  type="submit"
-                  value={msgStr("doLogIn")}
-                />
-              </div>
-            </form>
-          )}
-        </div>
       </div>
-      {enableWebAuthnConditionalUI && (
-        <>
-          <form id="webauth" action={url.loginAction} method="post">
-            <input type="hidden" id="clientDataJSON" name="clientDataJSON" />
-            <input type="hidden" id="authenticatorData" name="authenticatorData" />
-            <input type="hidden" id="signature" name="signature" />
-            <input type="hidden" id="credentialId" name="credentialId" />
-            <input type="hidden" id="userHandle" name="userHandle" />
-            <input type="hidden" id="error" name="error" />
-          </form>
-
-          {authenticators !== undefined && authenticators.authenticators.length !== 0 && (
-            <>
-              <form id="authn_select" className={kcClsx("kcFormClass")}>
-                {authenticators.authenticators.map((authenticator, i) => (
-                  <input key={i} type="hidden" name="authn_use_chk" readOnly value={authenticator.credentialId} />
-                ))}
-              </form>
-            </>
-          )}
-          <br />
-
-          <input
-            id={webAuthnButtonId}
-            type="button"
-            className={kcClsx("kcButtonClass", "kcButtonDefaultClass", "kcButtonBlockClass", "kcButtonLargeClass")}
-            value={msgStr("passkey-doAuthenticate")}
-          />
-        </>
-      )}
     </Template>
-  );
-}
-
-function PasswordWrapper(props: { kcClsx: KcClsx; i18n: I18n; passwordInputId: string; children: JSX.Element }) {
-  const { kcClsx, i18n, passwordInputId, children } = props;
-
-  const { msgStr } = i18n;
-
-  const { isPasswordRevealed, toggleIsPasswordRevealed } = useIsPasswordRevealed({ passwordInputId });
-
-  return (
-    <div className={kcClsx("kcInputGroup")}>
-      {children}
-      <button
-        type="button"
-        className={kcClsx("kcFormPasswordVisibilityButtonClass")}
-        aria-label={msgStr(isPasswordRevealed ? "hidePassword" : "showPassword")}
-        aria-controls={passwordInputId}
-        onClick={toggleIsPasswordRevealed}
-      >
-        <i className={kcClsx(isPasswordRevealed ? "kcFormPasswordVisibilityIconHide" : "kcFormPasswordVisibilityIconShow")} aria-hidden />
-      </button>
-    </div>
   );
 }
