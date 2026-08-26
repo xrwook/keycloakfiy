@@ -1,5 +1,5 @@
 import { Button, Checkbox, Divider, Dropdown, type DropdownOption, Link, TextField } from "@hae-fe/elements";
-import { Form, FormField, FormFieldRow } from "@hae-fe/pattern";
+import { FormField, FormFieldRow } from "@hae-fe/pattern";
 import axios from "axios";
 import { useEffect, useState, type ChangeEvent, type CSSProperties } from "react";
 import { kcSanitize } from "keycloakify/lib/kcSanitize";
@@ -132,7 +132,7 @@ export default function Register(props: RegisterProps) {
           )}
 
           <div>
-            <Form id="kc-register-form" action={url.registrationAction} method="post">
+            <form id="kc-register-form" action={url.registrationAction} method="post">
               <FormFieldRow cols={1}>
                 <FormField
                   layout="vertical"
@@ -228,7 +228,7 @@ export default function Register(props: RegisterProps) {
                 />
               </FormFieldRow>
               {agreed && <input type="hidden" name="termsAccepted" value="on" />}
-            </Form>
+            </form>
           </div>
 
           <div>
