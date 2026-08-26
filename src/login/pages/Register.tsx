@@ -20,6 +20,43 @@ interface PartnersResponse {
 
 const backofficeApiBaseUrl = import.meta.env.VITE_BACKOFFICE_API_BASE_URL?.replace(/\/$/, "") ?? "";
 
+const REQUIRED_ERROR_MESSAGES = new Set([
+  "필수 입력 항목입니다.",
+  "Please specify this field.",
+  "Please specify value.",
+  "값을 지정하세요.",
+  "이 필드를 지정하세요.",
+  "이메일을 지정하세요.",
+  "비밀번호를 지정하세요.",
+  "사용자 이름을 지정하세요.",
+  "이름을 지정하세요.",
+  "전화번호를 지정하세요."
+]);
+
+const FORMAT_ERROR_MESSAGES = new Set([
+  "입력 형식이 올바르지 않습니다.",
+  "잘못된 이메일 주소입니다.",
+  "잘못된 값입니다.",
+  "Invalid value.",
+  "Invalid value specified.",
+  "Please match requested format."
+]);
+
+const REQUIRED_FIELD_ERROR_MESSAGES = {
+  company: "회사를 선택해 주세요.",
+  name: "이름을 입력해 주세요.",
+  email: "이메일 ID를 입력해 주세요.",
+  password: "비밀번호를 입력해 주세요.",
+  passwordConfirm: "비밀번호 확인을 입력해 주세요.",
+  phoneNumber: "휴대폰 번호를 입력해 주세요."
+} as const;
+
+const FORMAT_FIELD_ERROR_MESSAGES = {
+  email: "올바른 형식의 이메일을 입력해 주세요.",
+  password: "영문자 시작, 특수문자/대소문자/숫자 포함 8자 이상 입력해 주세요.",
+  phoneNumber: "올바른 형식의 휴대폰 번호를 입력해 주세요."
+} as const;
+
 const styles: Record<string, CSSProperties> = {
   title: {
     font: "var(--typo-title-21-bold)",
@@ -35,6 +72,32 @@ const styles: Record<string, CSSProperties> = {
     gap: 8
   }
 };
+
+function normalizeErrorMessage(message: string) {
+  return message.replace(/<[^>]*>/g, "").trim();
+}
+
+function isFormatError(errorMessage: string) {
+  return FORMAT_ERROR_MESSAGES.has(errorMessage) || errorMessage.startsWith("잘못된 비밀번호") || errorMessage.startsWith("Invalid password");
+}
+
+function getRegisterFieldError(errorMessage: string | undefined, options: { requiredMessage: string; formatMessage?: string }) {
+  if (errorMessage === undefined) {
+    return undefined;
+  }
+
+  const normalizedErrorMessage = normalizeErrorMessage(errorMessage);
+
+  if (REQUIRED_ERROR_MESSAGES.has(normalizedErrorMessage)) {
+    return options.requiredMessage;
+  }
+
+  if (options.formatMessage !== undefined && isFormatError(normalizedErrorMessage)) {
+    return options.formatMessage;
+  }
+
+  return errorMessage;
+}
 
 export default function Register(props: RegisterProps) {
   const { kcContext, i18n, doUseDefaultCss, Template, classes } = props;
@@ -104,12 +167,27 @@ export default function Register(props: RegisterProps) {
     };
   }, [initialCompanyValue]);
 
-  const companyError = getFieldError("company");
-  const nameError = getFieldError("name");
-  const emailError = getFieldError("email", "username");
-  const passwordError = getFieldError("password");
-  const passwordConfirmError = getFieldError("password-confirm");
-  const phoneNumberError = getFieldError("phoneNumber");
+  const companyError = getRegisterFieldError(getFieldError("company"), {
+    requiredMessage: REQUIRED_FIELD_ERROR_MESSAGES.company
+  });
+  const nameError = getRegisterFieldError(getFieldError("name"), {
+    requiredMessage: REQUIRED_FIELD_ERROR_MESSAGES.name
+  });
+  const emailError = getRegisterFieldError(getFieldError("email", "username"), {
+    requiredMessage: REQUIRED_FIELD_ERROR_MESSAGES.email,
+    formatMessage: FORMAT_FIELD_ERROR_MESSAGES.email
+  });
+  const passwordError = getRegisterFieldError(getFieldError("password"), {
+    requiredMessage: REQUIRED_FIELD_ERROR_MESSAGES.password,
+    formatMessage: FORMAT_FIELD_ERROR_MESSAGES.password
+  });
+  const passwordConfirmError = getRegisterFieldError(getFieldError("password-confirm"), {
+    requiredMessage: REQUIRED_FIELD_ERROR_MESSAGES.passwordConfirm
+  });
+  const phoneNumberError = getRegisterFieldError(getFieldError("phoneNumber"), {
+    requiredMessage: REQUIRED_FIELD_ERROR_MESSAGES.phoneNumber,
+    formatMessage: FORMAT_FIELD_ERROR_MESSAGES.phoneNumber
+  });
   const systemMessage = messagesPerField.existsError("global") ? message : undefined;
 
   return (
