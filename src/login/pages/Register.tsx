@@ -107,6 +107,10 @@ export default function Register(props: RegisterProps) {
   const initialCompanyValue = getAttributeValue("company");
 
   const getFieldError = (fieldName: string, ...otherFieldNames: string[]) => {
+    if ([fieldName, ...otherFieldNames].some(field => dismissedFieldErrors.has(field))) {
+      return undefined;
+    }
+
     if (!messagesPerField.existsError(fieldName, ...otherFieldNames)) {
       return undefined;
     }
@@ -124,6 +128,17 @@ export default function Register(props: RegisterProps) {
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [phoneNumber, setPhoneNumber] = useState(getAttributeValue("phoneNumber"));
   const [agreed, setAgreed] = useState(true);
+  const [dismissedFieldErrors, setDismissedFieldErrors] = useState<Set<string>>(new Set());
+
+  const clearFieldError = (...fieldNames: string[]) => {
+    setDismissedFieldErrors(currentFields => {
+      const nextFields = new Set(currentFields);
+
+      fieldNames.forEach(fieldName => nextFields.add(fieldName));
+
+      return nextFields;
+    });
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -222,7 +237,10 @@ export default function Register(props: RegisterProps) {
                         placeholder="회사를 선택해 주세요."
                         options={companyOptions}
                         value={company}
-                        onChange={(v: DropdownOption | null) => setCompany(v)}
+                        onChange={(v: DropdownOption | null) => {
+                          clearFieldError("company");
+                          setCompany(v);
+                        }}
                       />
                       <input type="hidden" name="company" value={company?.value ?? ""} />
                     </>
@@ -237,7 +255,10 @@ export default function Register(props: RegisterProps) {
                       hdsProps={{ helpText: nameError ?? "" }}
                       placeholder="이름을 입력해 주세요."
                       value={name}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                        clearFieldError("name");
+                        setName(e.target.value);
+                      }}
                       error={nameError !== undefined}
                     />
                   }
@@ -252,7 +273,10 @@ export default function Register(props: RegisterProps) {
                         hdsProps={{ helpText: emailError ?? "올바른 형식의 이메일을 입력해 주세요." }}
                         placeholder="이메일 ID를 입력해 주세요."
                         value={email}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                          clearFieldError("email", "username");
+                          setEmail(e.target.value);
+                        }}
                         error={emailError !== undefined}
                       />
                     </div>
@@ -270,7 +294,10 @@ export default function Register(props: RegisterProps) {
                       type="password"
                       placeholder="비밀번호를 입력해 주세요."
                       value={password}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                        clearFieldError("password");
+                        setPassword(e.target.value);
+                      }}
                       error={passwordError !== undefined}
                     />
                   }
@@ -285,7 +312,10 @@ export default function Register(props: RegisterProps) {
                       type="password"
                       placeholder="비밀번호를 다시 입력하세요"
                       value={passwordConfirm}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => setPasswordConfirm(e.target.value)}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                        clearFieldError("password-confirm");
+                        setPasswordConfirm(e.target.value);
+                      }}
                       error={passwordConfirmError !== undefined}
                     />
                   }
@@ -299,7 +329,10 @@ export default function Register(props: RegisterProps) {
                       hdsProps={{ helpText: phoneNumberError ?? "올바른 형식의 휴대폰 번호를 입력해 주세요." }}
                       placeholder="휴대폰 번호 입력해 주세요."
                       value={phoneNumber}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => setPhoneNumber(e.target.value)}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                        clearFieldError("phoneNumber");
+                        setPhoneNumber(e.target.value);
+                      }}
                       error={phoneNumberError !== undefined}
                     />
                   }
