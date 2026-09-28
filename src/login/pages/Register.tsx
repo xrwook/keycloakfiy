@@ -6,6 +6,7 @@ import { kcSanitize } from "keycloakify/lib/kcSanitize";
 import type { PageProps } from "keycloakify/login/pages/PageProps";
 import type { KcContext } from "../KcContext";
 import type { I18n } from "../i18n";
+import SystemErrorAlert from "../components/SystemErrorAlert";
 
 type RegisterProps = PageProps<Extract<KcContext, { pageId: "register.ftl" }>, I18n>;
 
@@ -203,7 +204,7 @@ export default function Register(props: RegisterProps) {
     requiredMessage: REQUIRED_FIELD_ERROR_MESSAGES.phoneNumber,
     formatMessage: FORMAT_FIELD_ERROR_MESSAGES.phoneNumber
   });
-  const systemMessage = messagesPerField.existsError("global") ? message : undefined;
+  const systemMessage = messagesPerField.existsError("global") && message !== undefined ? { ...message, type: "warning" as const } : undefined;
 
   return (
     <Template kcContext={kcContext} i18n={i18n} doUseDefaultCss={doUseDefaultCss} classes={classes} displayMessage={false} headerNode={null}>
@@ -216,13 +217,7 @@ export default function Register(props: RegisterProps) {
             </div>
           </div>
 
-          {systemMessage !== undefined && (
-            <div
-              dangerouslySetInnerHTML={{
-                __html: kcSanitize(systemMessage.summary)
-              }}
-            />
-          )}
+          <SystemErrorAlert message={systemMessage} />
 
           <div>
             <form id="kc-register-form" action={url.registrationAction} method="post">

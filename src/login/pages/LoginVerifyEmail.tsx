@@ -7,7 +7,7 @@ import type { I18n } from "../i18n";
 export default function LoginVerifyEmail(props: PageProps<Extract<KcContext, { pageId: "login-verify-email.ftl" }>, I18n>) {
   const { kcContext, i18n, doUseDefaultCss, Template, classes } = props;
 
-  const { url } = kcContext;
+  const { url, isAppInitiatedAction } = kcContext;
   const loginUrl = url.loginUrl;
 
   return (
@@ -24,6 +24,25 @@ export default function LoginVerifyEmail(props: PageProps<Extract<KcContext, { p
               <br />
               관리자 승인 후 E-CMP를 이용할 수 있습니다.
             </Typography>
+            {isAppInitiatedAction ? (
+              <form id="kc-verify-email-form" action={url.loginAction} method="post">
+                <Button className="mt-6" size="large" semantic="brand" styleOption="fill" type="submit">
+                  인증메일 재발송
+                </Button>
+              </form>
+            ) : (
+              <Button
+                size="large"
+                semantic="brand"
+                styleOption="fill"
+                className="mt-6"
+                onClick={() => {
+                  window.location.href = url.loginAction;
+                }}
+              >
+                인증메일 재발송
+              </Button>
+            )}
             <Button
               className="mt-6"
               size="large"

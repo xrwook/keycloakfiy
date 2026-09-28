@@ -17,6 +17,23 @@ export const Default: Story = {
   render: () => <KcPageStory />
 };
 
+export const WithSystemMessage: Story = {
+  render: () => (
+    <KcPageStory
+      kcContext={{
+        message: {
+          summary: "작업이 만료되었습니다. 지금 로그인 절차를 계속하세요.",
+          type: "warning"
+        },
+        messagesPerField: {
+          existsError: (fieldName: string) => fieldName === "global",
+          get: () => undefined
+        }
+      }}
+    />
+  )
+};
+
 export const WithEmailAlreadyExists: Story = {
   render: () => (
     <KcPageStory
