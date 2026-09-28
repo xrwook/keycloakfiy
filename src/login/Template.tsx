@@ -19,5 +19,25 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
     return null;
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <style>{`
+        input[type="password"]::-ms-reveal,
+        input[type="password"]::-ms-clear {
+          display: none;
+        }
+
+        input[type="password"]::-webkit-credentials-auto-fill-button,
+        input[type="password"]::-webkit-textfield-decoration-container {
+          display: none;
+        }
+
+        input[type="password"] {
+          appearance: none;
+          -webkit-appearance: none;
+        }
+      `}</style>
+      {children}
+    </>
+  );
 }

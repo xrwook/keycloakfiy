@@ -50,26 +50,32 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
   const [password, setPassword] = useState("");
   const [rememberUserId, setRememberUserId] = useState(!!login.rememberMe);
   const [isLoginButtonDisabled, setIsLoginButtonDisabled] = useState(false);
+  const [isCredentialErrorDismissed, setIsCredentialErrorDismissed] = useState(false);
 
-  const hasCredentialError = messagesPerField.existsError("username", "password");
+  const hasCredentialServerError = messagesPerField.existsError("username", "password");
+  const hasCredentialError = hasCredentialServerError && !isCredentialErrorDismissed;
   const errorMessage = hasCredentialError ? kcSanitize(messagesPerField.getFirstError("username", "password")) : undefined;
-  const systemMessage = hasCredentialError ? undefined : message;
+  const systemMessage = hasCredentialServerError ? undefined : message;
   const socialProviders = realm.password && social?.providers !== undefined ? social.providers : [];
   const isSubmitDisabled = isLoginButtonDisabled || (!usernameHidden && userId.trim() === "") || password.trim() === "";
 
   const handleUserIdChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setIsCredentialErrorDismissed(true);
     setUserId(event.target.value);
   };
 
   const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setIsCredentialErrorDismissed(true);
     setPassword(event.target.value);
   };
 
   const handleClearUserId = () => {
+    setIsCredentialErrorDismissed(true);
     setUserId("");
   };
 
   const handleClearPassword = () => {
+    setIsCredentialErrorDismissed(true);
     setPassword("");
   };
 
