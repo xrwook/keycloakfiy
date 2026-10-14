@@ -20,7 +20,7 @@ export default function Info(props: PageProps<Extract<KcContext, { pageId: "info
 
   const { advancedMsgStr, msg } = i18n;
 
-  const { messageHeader, message, requiredActions, skipLink, pageRedirectUri, actionUri, client, resultType, loginUrl } = kcContext;
+  const { messageHeader, message, requiredActions, skipLink, pageRedirectUri, actionUri, client, resultType, url } = kcContext;
 
   const infoState: InfoState = (() => {
     const isEmailVerifyScreen = !!actionUri && actionUri.includes("/login-actions/action-token");
@@ -55,7 +55,7 @@ export default function Info(props: PageProps<Extract<KcContext, { pageId: "info
   }
 
   const requiredActionsText = requiredActions?.map(requiredAction => advancedMsgStr(`requiredAction.${requiredAction}`)).join(", ");
-  const moveUrl = pageRedirectUri ?? actionUri ?? loginUrl ?? client?.baseUrl;
+  const moveUrl = pageRedirectUri ?? actionUri ?? url.loginUrl;
   const buttonText = pageRedirectUri ? msg("backToApplication") : actionUri ? msg("proceedWithAction") : advancedMsgStr("infoLoginButton");
   if (resultType === "otp-reset-email-sent") {
     return (
