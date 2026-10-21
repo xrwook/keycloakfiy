@@ -1,0 +1,39 @@
+# This file is managed by Keycloakify, do not edit it manually.
+
+# === Owned files start ===
+/email/theme.properties
+/email/html/email-test.ftl
+/email/html/email-update-confirmation.ftl
+/email/html/email-verification-with-code.ftl
+/email/html/email-verification.ftl
+/email/html/event-login_error.ftl
+/email/html/event-remove_credential.ftl
+/email/html/event-remove_totp.ftl
+/email/html/event-update_credential.ftl
+/email/html/event-update_password.ftl
+/email/html/event-update_totp.ftl
+/email/html/event-user_disabled_by_permanent_lockout.ftl
+/email/html/event-user_disabled_by_temporary_lockout.ftl
+/email/html/executeActions.ftl
+/email/html/identity-provider-link.ftl
+/email/html/org-invite.ftl
+/email/html/password-reset.ftl
+/email/html/template.ftl
+/email/messages/messages_ko.properties
+/email/text/email-test.ftl
+/email/text/email-update-confirmation.ftl
+/email/text/email-verification-with-code.ftl
+/email/text/email-verification.ftl
+/email/text/event-login_error.ftl
+/email/text/event-remove_credential.ftl
+/email/text/event-remove_totp.ftl
+/email/text/event-update_credential.ftl
+/email/text/event-update_password.ftl
+/email/text/event-update_totp.ftl
+/email/text/event-user_disabled_by_permanent_lockout.ftl
+/email/text/event-user_disabled_by_temporary_lockout.ftl
+/email/text/executeActions.ftl
+/email/text/identity-provider-link.ftl
+/email/text/org-invite.ftl
+/email/text/password-reset.ftl
+# === Owned files end ===

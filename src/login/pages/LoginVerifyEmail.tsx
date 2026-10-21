@@ -24,6 +24,17 @@ export default function LoginVerifyEmail(props: PageProps<Extract<KcContext, { p
               <br />
               관리자 승인 후 E-CMP를 이용할 수 있습니다.
             </Typography>
+            <Button
+              className="mt-6"
+              size="large"
+              semantic="neutral"
+              styleOption="outline"
+              onClick={() => {
+                window.location.href = loginUrl;
+              }}
+            >
+              로그인 화면으로 이동
+            </Button>
             {isAppInitiatedAction ? (
               <form id="kc-verify-email-form" action={url.loginAction} method="post">
                 <Button className="mt-6" size="large" semantic="brand" styleOption="fill" type="submit">
@@ -43,17 +54,6 @@ export default function LoginVerifyEmail(props: PageProps<Extract<KcContext, { p
                 인증메일 재발송
               </Button>
             )}
-            <Button
-              className="mt-6"
-              size="large"
-              semantic="neutral"
-              styleOption="outline"
-              onClick={() => {
-                window.location.href = loginUrl;
-              }}
-            >
-              로그인 화면으로 이동
-            </Button>
           </div>
         </div>
       </div>
