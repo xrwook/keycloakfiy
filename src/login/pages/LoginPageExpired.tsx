@@ -9,7 +9,7 @@ export default function LoginPageExpired(props: PageProps<Extract<KcContext, { p
 
   const { url } = kcContext;
 
-  const loginUrl = url.loginUrl;
+  const loginRestartUrl = url.loginRestartFlowUrl;
 
   return (
     <Template kcContext={kcContext} i18n={i18n} doUseDefaultCss={doUseDefaultCss} classes={classes} displayMessage={false} headerNode={null}>
@@ -29,7 +29,7 @@ export default function LoginPageExpired(props: PageProps<Extract<KcContext, { p
               semantic="neutral"
               styleOption="outline"
               onClick={() => {
-                window.location.href = loginUrl;
+                window.location.href = loginRestartUrl;
               }}
             >
               로그인 화면으로 이동
