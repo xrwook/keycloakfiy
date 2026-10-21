@@ -7,8 +7,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:stg": "tsc && vite build --mode stg",
     "build-theme": "keycloakify build && node scripts/copy-jar.mjs",
     "keycloak": "tsc && vite build && keycloakify build && node scripts/copy-jar.mjs",
+    "keycloak:stg": "tsc && vite build --mode stg && keycloakify build && node scripts/copy-jar.mjs",
     "storybook": "storybook dev -p 6006",
     "format": "prettier . --write"
   },
