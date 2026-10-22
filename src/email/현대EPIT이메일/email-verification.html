@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="x-apple-disable-message-reformatting" />
+  <title>이메일 인증</title>
+
+  <!-- Asta Sans 웹폰트 (보조): Apple Mail, iOS 메일 등 일부 클라이언트에서만 적용되며, 그 외에는 인라인 font-family의 다음 폰트로 대체됨 -->
+  <!--[if !mso]><!-->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Asta+Sans:wght@400;500;700&amp;display=swap" />
+  <!--<![endif]-->
+  <style type="text/css">
+    body { margin: 0; padding: 0; width: 100% !important; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table { border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { border: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+    a { text-decoration: none; }
+
+    @media only screen and (max-width: 600px) {
+      .outer-pad { padding: 0 !important; }
+      .content-pad { padding-left: 24px !important; padding-right: 24px !important; }
+      .title { font-size: 24px !important; line-height: 32px !important; }
+    }
+  </style>
+</head>
+<body style="margin:0; padding:0; ">
+    <!-- 메일 카드 -->
+    <table align="center" role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%; max-width:600px; background-color:#FFFFFF;">
+      <tr>
+        <td class="content-pad" style="padding:80px 0px 80px 0px; font-family:'Asta Sans','Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',Arial,sans-serif; color:#1F2328;">
+
+          <!-- 로고 영역 -->
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:20px 0 20px 0;">
+            <tr>
+              <td valign="middle" style="padding-right:16px;">
+                <!-- 로고 이미지  -->
+                <img src="../images/hyundai-engineering-logo.png" alt="HYUNDAI ENGINEERING CO.,LTD." width="112" height="32" style="display:block; width:112px; height:auto;" />
+              </td>
+              <!-- 구분선: 높이 20px 고정, 세로 중앙 정렬 -->
+              <td valign="middle" width="1" style="width:1px;">
+                <table role="presentation" width="1" height="20" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td width="1" height="26" bgcolor="#B7BBC3" style="width:1px; height:26px; background-color:#B7BBC3; font-size:0; line-height:0; mso-line-height-rule:exactly;">&nbsp;</td>
+                  </tr>
+                </table>
+              </td>
+              <td valign="middle" style="padding-left:16px; font-size:23px; line-height:32px; font-weight:700; color:#131416; letter-spacing:-0.2px;font-family:'Asta Sans','Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',Arial,sans-serif;">
+                E-CMP
+              </td>
+            </tr>
+          </table>
+
+          <!-- 타이틀 -->
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td class="title" style="padding-top:64px; font-size:29px; line-height:42px; font-weight:700; color:#131416; letter-spacing:-0.5px;">
+                이메일을 인증해 주세요.
+              </td>
+            </tr>
+
+            <!-- 인사말 -->
+            <tr>
+              <td style="padding-top:40px; font-size:17px; line-height:24px; color:#131416;">
+                안녕하세요 {사용자 이름}님.
+              </td>
+            </tr>
+            <tr>
+              <td style="padding-top:24px; font-size:17px; line-height:24px; color:#131416;">
+                E-CMP 회원가입을 위해 아래 버튼을 눌러 이메일 인증을 완료해 주세요.<br />
+                이메일 인증 후 회원가입이 완료되며 이후 권한 승인 절차가 진행됩니다.
+              </td>
+            </tr>
+
+            <!-- 버튼 -->
+            <tr>
+              <td style="padding-top:40px;">
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td align="center" bgcolor="#0056FF" style="background-color:#0056FF;">
+                      <!-- TODO: 실제 페이지 URL로 교체 -->
+                      <a href="#" target="_blank"
+                          style="display:inline-block; padding:12px 16px; min-width:96px; font-family:'Asta Sans','Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',Arial,sans-serif;
+                                font-size:17px; line-height:24px; color:#FFFFFF; text-decoration:none; text-align:center;">
+                        이메일 인증
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding-top:32px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td bgcolor="#EEEFF1" style="background-color:#EFF0F1; padding:8px 12px;">
+                      <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                        <tr>
+                          <td valign="middle" style="padding-right:8px; font-size:0; line-height:0;">
+                            <img src="../images/icon-info.png" alt="" width="16" height="16"
+                                style="display:block; width:16px; height:16px;" />
+                          </td>
+                          <td valign="middle" style="font-size:15px; line-height:20px; color:#4B5058; font-family:'Asta Sans','Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',Arial,sans-serif;">
+                           비밀번호 재설정 링크는 발송 시점 부터 {00분}간 유효합니다.
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- 구분선 + 푸터 -->
+            <tr>
+              <td style="padding-top:64px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td style="border-top:1px solid #DEDFE3; padding:20px 0; font-size:15px; line-height:20px; color:#6B7280;">
+                      본 메일은 발신전용으로 회신이 불가합니다.<br />
+                      Copyright &copy; 2026 Hyundai Engineering Co.,LTD. All rights reserved.
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+
+        </td>
+      </tr>
+    </table>
+</body>
+</html>
