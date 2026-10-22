@@ -12,7 +12,11 @@ const kcContextExtension: KcContextExtension = {
   }
 };
 const kcContextExtensionPerPage: KcContextExtensionPerPage = {
-  "login-otp.ftl": {},
+  "login-otp.ftl": {
+    url: {
+      loginResetCredentialsUrl: "#"
+    }
+  },
   "info.ftl": {}
 };
 

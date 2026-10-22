@@ -4,6 +4,7 @@ import { useState, type ChangeEvent, type CSSProperties, type ReactNode } from "
 
 interface OtpAuthFormProps {
   action: string;
+  resetUrl: string;
   errorMessage?: string;
   children?: ReactNode;
 }
@@ -46,7 +47,7 @@ const styles: Record<string, CSSProperties> = {
   }
 };
 
-const OtpAuthForm = ({ action, errorMessage, children }: OtpAuthFormProps) => {
+const OtpAuthForm = ({ action, resetUrl, errorMessage, children }: OtpAuthFormProps) => {
   const [otpValue, setOtpValue] = useState("");
   const normalizedErrorMessage = errorMessage?.trim() ? errorMessage : undefined;
   const showError = normalizedErrorMessage !== undefined;
@@ -57,11 +58,6 @@ const OtpAuthForm = ({ action, errorMessage, children }: OtpAuthFormProps) => {
 
   const handleClearOtpValue = () => {
     setOtpValue("");
-  };
-
-  const handleOtpResetClick = (event: { preventDefault: () => void }) => {
-    event.preventDefault();
-    document.getElementById("kc-otp-reset-button")?.click();
   };
 
   return (
@@ -136,23 +132,12 @@ const OtpAuthForm = ({ action, errorMessage, children }: OtpAuthFormProps) => {
             </p>
             <Link
               size="medium"
-              href="#"
-              onClick={handleOtpResetClick}
+              href={resetUrl}
               className="color-(--color-light-link-default)"
               style={styles.resetLink}
             >
               OTP 재설정하기
             </Link>
-            <button
-              id="kc-otp-reset-button"
-              name="reset-otp"
-              value="true"
-              type="submit"
-              formNoValidate
-              style={{ display: "none" }}
-              tabIndex={-1}
-              aria-hidden="true"
-            />
           </div>
         </div>
       </div>

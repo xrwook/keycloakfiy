@@ -10,7 +10,11 @@ export type KcContextExtension = {
 };
 
 export type KcContextExtensionPerPage = {
-  "login-otp.ftl": {};
+  "login-otp.ftl": {
+    url: {
+      loginResetCredentialsUrl: string;
+    };
+  };
   "info.ftl": {
     resultType?: "otp-reset-email-sent";
     loginUrl?: string;

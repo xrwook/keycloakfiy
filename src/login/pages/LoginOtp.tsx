@@ -52,7 +52,11 @@ export default function LoginOtp(props: PageProps<Extract<KcContext, { pageId: "
           <div style={styles.loginContainer}>
             <LoginHeader title={PAGE_CONFIG.title} userId={auth?.attemptedUsername} description={PAGE_CONFIG.description} />
             <SystemErrorAlert message={systemMessage} />
-            <OtpAuthForm action={url.loginAction} errorMessage={errorMessage}>
+            <OtpAuthForm
+              action={url.loginAction}
+              resetUrl={url.loginResetCredentialsUrl}
+              errorMessage={errorMessage}
+            >
               {selectedCredentialId !== undefined && <input type="hidden" name="selectedCredentialId" value={selectedCredentialId} />}
             </OtpAuthForm>
           </div>
