@@ -8,7 +8,7 @@ export default function Error(props: PageProps<Extract<KcContext, { pageId: "err
   const { kcContext, i18n, doUseDefaultCss, Template, classes } = props;
 
   const { client, url } = kcContext;
-  const loginUrl = url.loginUrl ?? client?.baseUrl ?? "#";
+  const loginUrl = url.loginRestartFlowUrl ?? url.loginUrl ?? client?.baseUrl ?? "#";
 
   return (
     <Template kcContext={kcContext} i18n={i18n} doUseDefaultCss={doUseDefaultCss} classes={classes} displayMessage={false} headerNode={null}>
