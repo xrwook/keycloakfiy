@@ -8,7 +8,9 @@ export default function Error(props: PageProps<Extract<KcContext, { pageId: "err
   const { kcContext, i18n, doUseDefaultCss, Template, classes } = props;
 
   const { client, url } = kcContext;
-  const loginUrl = url.loginRestartFlowUrl ?? url.loginUrl ?? client?.baseUrl ?? "#";
+  // An expired tab can no longer recover the old Keycloak authentication flow.
+  // Leave the flow through the client so the application starts a fresh login request.
+  const loginUrl = client?.baseUrl ?? url.loginUrl ?? url.loginRestartFlowUrl ?? "#";
 
   return (
     <Template kcContext={kcContext} i18n={i18n} doUseDefaultCss={doUseDefaultCss} classes={classes} displayMessage={false} headerNode={null}>

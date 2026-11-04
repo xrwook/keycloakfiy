@@ -15,7 +15,9 @@ const LoginUpdatePassword = lazy(() => import("./pages/LoginUpdatePassword"));
 const LoginVerifyEmail = lazy(() => import("./pages/LoginVerifyEmail"));
 const Info = lazy(() => import("./pages/Info"));
 const LoginResetOtp = lazy(() => import("./pages/LoginResetOtp"));
-
+const Terms = lazy(() => import("./pages/Terms"));
+const IdpReviewUserProfile = lazy(() => import("./pages/IdpReviewUserProfile"));
+const LoginIdpLinkConfirm = lazy(() => import("./pages/LoginIdpLinkConfirm"));
 const doMakeUserConfirmPassword = true;
 
 export default function KcPage(props: { kcContext: KcContext }) {
@@ -73,6 +75,32 @@ export default function KcPage(props: { kcContext: KcContext }) {
                 {...{ kcContext, i18n, classes }}
                 Template={Template}
                 doUseDefaultCss={false}
+              />
+            );
+          case "terms.ftl":
+            return (
+              <Terms
+                {...{ kcContext, i18n, classes }}
+                Template={Template}
+                doUseDefaultCss={false}
+              />
+            );
+          case "login-idp-link-confirm.ftl":
+            return (
+              <LoginIdpLinkConfirm
+                {...{ kcContext, i18n, classes }}
+                Template={Template}
+                doUseDefaultCss={true}
+              />
+            );
+          case "idp-review-user-profile.ftl":
+            return (
+              <IdpReviewUserProfile
+                {...{ kcContext, i18n, classes }}
+                Template={Template}
+                doUseDefaultCss={true}
+                UserProfileFormFields={UserProfileFormFields}
+                doMakeUserConfirmPassword={doMakeUserConfirmPassword}
               />
             );
           case "login-reset-otp.ftl":
