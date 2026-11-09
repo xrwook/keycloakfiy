@@ -1,5 +1,4 @@
 export const RESEND_REQUEST_KEY = "login-verify-email-resend-request";
-export const RESEND_REQUEST_MS = 30 * 1000;
 
 export function clearResendRequested() {
   try {

@@ -6,7 +6,7 @@ import { Icon3dTask } from "../assets";
 import { ConfirmModal } from "../components/ConfirmModal";
 import SystemErrorAlert from "../components/SystemErrorAlert";
 import { useEffect, useState } from "react";
-import { RESEND_REQUEST_KEY, RESEND_REQUEST_MS, clearResendRequested } from "../emailResendRequest";
+import { RESEND_REQUEST_KEY, clearResendRequested } from "../emailResendRequest";
 
 export default function LoginVerifyEmail(props: PageProps<Extract<KcContext, { pageId: "login-verify-email.ftl" }>, I18n>) {
   const { kcContext, i18n, doUseDefaultCss, Template, classes } = props;
@@ -17,18 +17,16 @@ export default function LoginVerifyEmail(props: PageProps<Extract<KcContext, { p
   const [resendMessage, setResendMessage] = useState("");
 
   useEffect(() => {
-    let requestedAt: number;
+    let resendRequested: boolean;
     try {
-      const storedRequestTime = sessionStorage.getItem(RESEND_REQUEST_KEY);
-      requestedAt = storedRequestTime === null ? NaN : Number(storedRequestTime);
-      // Consume once, including expired requests and failed responses.
+      resendRequested = sessionStorage.getItem(RESEND_REQUEST_KEY) === "true";
+      // Consume once so refreshing does not reopen the modal.
       sessionStorage.removeItem(RESEND_REQUEST_KEY);
     } catch {
       return;
     }
 
-    const age = Date.now() - requestedAt;
-    if (!Number.isFinite(requestedAt) || requestedAt <= 0 || age < 0 || age > RESEND_REQUEST_MS) {
+    if (!resendRequested) {
       return;
     }
     if (message?.type === "error") {
@@ -44,7 +42,7 @@ export default function LoginVerifyEmail(props: PageProps<Extract<KcContext, { p
 
   const markResendRequest = () => {
     try {
-      sessionStorage.setItem(RESEND_REQUEST_KEY, String(Date.now()));
+      sessionStorage.setItem(RESEND_REQUEST_KEY, "true");
     } catch {
       // Continue with the request even if storage is unavailable.
     }
