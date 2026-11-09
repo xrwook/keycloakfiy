@@ -1,14 +1,79 @@
 import { Button, Typography } from "@hae-fe/elements";
 import { Icon3dTask } from "@hae-fe/icon-library/react/3d";
+import { useEffect, useState, type CSSProperties, type FormEvent } from "react";
 import type { PageProps } from "keycloakify/login/pages/PageProps";
 import type { KcContext } from "../KcContext";
 import type { I18n } from "../i18n";
 
+const RESEND_REQUESTED_STORAGE_KEY = "login-verify-email-resend-requested";
+
+const styles: Record<string, CSSProperties> = {
+  modalBackdrop: {
+    position: "fixed",
+    inset: 0,
+    zIndex: 1000,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 24,
+    backgroundColor: "var(--color-light-alpha-black-60, rgba(0, 0, 0, 0.6))"
+  },
+  modal: {
+    width: "min(100%, 420px)",
+    padding: 28,
+    borderRadius: "var(--radius-8)",
+    backgroundColor: "var(--color-light-surface-white)",
+    boxShadow: "0 8px 24px rgba(0, 0, 0, 0.18)",
+    textAlign: "center"
+  },
+  modalTitle: {
+    margin: 0,
+    fontSize: "var(--typo-font-size-21)",
+    fontWeight: 700,
+    lineHeight: "var(--typo-line-height-30)",
+    color: "var(--color-light-text-neutral-strongest)"
+  },
+  modalDescription: {
+    margin: "12px 0 24px",
+    fontSize: "var(--typo-font-size-15)",
+    lineHeight: "var(--typo-line-height-22)",
+    color: "var(--color-light-text-neutral-strong)"
+  }
+};
+
 export default function LoginVerifyEmail(props: PageProps<Extract<KcContext, { pageId: "login-verify-email.ftl" }>, I18n>) {
   const { kcContext, i18n, doUseDefaultCss, Template, classes } = props;
 
-  const { url, isAppInitiatedAction } = kcContext;
+  const { url, isAppInitiatedAction, message } = kcContext;
   const loginRestartUrl = url.loginRestartFlowUrl;
+  const [isResendModalOpen, setIsResendModalOpen] = useState(false);
+
+  useEffect(() => {
+    let resendRequested = false;
+
+    try {
+      resendRequested = sessionStorage.getItem(RESEND_REQUESTED_STORAGE_KEY) === "true";
+      sessionStorage.removeItem(RESEND_REQUESTED_STORAGE_KEY);
+    } catch {
+      return;
+    }
+
+    if (resendRequested && message?.type === "success") {
+      setIsResendModalOpen(true);
+    }
+  }, [message?.type]);
+
+  const markResendRequested = () => {
+    try {
+      sessionStorage.setItem(RESEND_REQUESTED_STORAGE_KEY, "true");
+    } catch {
+      // Continue with the Keycloak request even when browser storage is unavailable.
+    }
+  };
+
+  const handleResendSubmit = (_event: FormEvent<HTMLFormElement>) => {
+    markResendRequested();
+  };
 
   return (
     <Template kcContext={kcContext} i18n={i18n} doUseDefaultCss={doUseDefaultCss} classes={classes} displayMessage={false} headerNode={null}>
@@ -36,7 +101,7 @@ export default function LoginVerifyEmail(props: PageProps<Extract<KcContext, { p
               로그인 화면으로 이동
             </Button>
             {isAppInitiatedAction ? (
-              <form id="kc-verify-email-form" action={url.loginAction} method="post">
+              <form id="kc-verify-email-form" action={url.loginAction} method="post" onSubmit={handleResendSubmit}>
                 <Button className="mt-6" size="large" semantic="brand" styleOption="fill" type="submit">
                   인증메일 재발송
                 </Button>
@@ -48,6 +113,7 @@ export default function LoginVerifyEmail(props: PageProps<Extract<KcContext, { p
                 styleOption="fill"
                 className="mt-6"
                 onClick={() => {
+                  markResendRequested();
                   window.location.href = url.loginAction;
                 }}
               >
@@ -57,6 +123,19 @@ export default function LoginVerifyEmail(props: PageProps<Extract<KcContext, { p
           </div>
         </div>
       </div>
+      {isResendModalOpen && (
+        <div style={styles.modalBackdrop} role="presentation">
+          <div style={styles.modal} role="dialog" aria-modal="true" aria-labelledby="email-resend-modal-title">
+            <h2 id="email-resend-modal-title" style={styles.modalTitle}>
+              인증메일을 재발송했습니다.
+            </h2>
+            <p style={styles.modalDescription}>메일함을 확인해 주세요.</p>
+            <Button size="medium" semantic="brand" styleOption="fill" type="button" onClick={() => setIsResendModalOpen(false)}>
+              확인
+            </Button>
+          </div>
+        </div>
+      )}
     </Template>
   );
 }
