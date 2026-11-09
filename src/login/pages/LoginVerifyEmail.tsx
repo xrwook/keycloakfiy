@@ -1,6 +1,6 @@
 import { Button, Typography } from "@hae-fe/elements";
 import { Icon3dTask } from "@hae-fe/icon-library/react/3d";
-import { useEffect, useState, type CSSProperties, type FormEvent } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import type { PageProps } from "keycloakify/login/pages/PageProps";
 import type { KcContext } from "../KcContext";
 import type { I18n } from "../i18n";
@@ -53,14 +53,18 @@ export default function LoginVerifyEmail(props: PageProps<Extract<KcContext, { p
 
     try {
       resendRequested = sessionStorage.getItem(RESEND_REQUESTED_STORAGE_KEY) === "true";
-      sessionStorage.removeItem(RESEND_REQUESTED_STORAGE_KEY);
     } catch {
       return;
     }
 
-    if (resendRequested && message?.type === "success") {
-      setIsResendModalOpen(true);
+    // 기본 진입 시에도 warning/info message가 있을 수 있으므로,
+    // 재발송 성공 응답일 때만 요청 표시를 소비한다.
+    if (!resendRequested || message?.type !== "success") {
+      return;
     }
+
+    sessionStorage.removeItem(RESEND_REQUESTED_STORAGE_KEY);
+    setIsResendModalOpen(true);
   }, [message?.type]);
 
   const markResendRequested = () => {
@@ -69,10 +73,6 @@ export default function LoginVerifyEmail(props: PageProps<Extract<KcContext, { p
     } catch {
       // Continue with the Keycloak request even when browser storage is unavailable.
     }
-  };
-
-  const handleResendSubmit = (_event: FormEvent<HTMLFormElement>) => {
-    markResendRequested();
   };
 
   return (
@@ -101,7 +101,7 @@ export default function LoginVerifyEmail(props: PageProps<Extract<KcContext, { p
               로그인 화면으로 이동
             </Button>
             {isAppInitiatedAction ? (
-              <form id="kc-verify-email-form" action={url.loginAction} method="post" onSubmit={handleResendSubmit}>
+              <form id="kc-verify-email-form" action={url.loginAction} method="post" onSubmit={() => markResendRequested()}>
                 <Button className="mt-6" size="large" semantic="brand" styleOption="fill" type="submit">
                   인증메일 재발송
                 </Button>
