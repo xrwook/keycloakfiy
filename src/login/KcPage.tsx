@@ -98,9 +98,7 @@ export default function KcPage(props: { kcContext: KcContext }) {
               <IdpReviewUserProfile
                 {...{ kcContext, i18n, classes }}
                 Template={Template}
-                doUseDefaultCss={true}
-                UserProfileFormFields={UserProfileFormFields}
-                doMakeUserConfirmPassword={doMakeUserConfirmPassword}
+                doUseDefaultCss={false}
               />
             );
           case "login-reset-otp.ftl":
