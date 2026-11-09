@@ -57,9 +57,14 @@ export default function LoginVerifyEmail(props: PageProps<Extract<KcContext, { p
       return;
     }
 
-    // 기본 진입 시에도 warning/info message가 있을 수 있으므로,
-    // 재발송 성공 응답일 때만 요청 표시를 소비한다.
-    if (!resendRequested || message?.type !== "success") {
+    // 재발송 요청 후 명시적인 오류가 없으면 재발송 완료로 처리한다.
+    // Keycloak 설정에 따라 성공 응답의 message가 없거나 warning으로 내려올 수 있다.
+    if (!resendRequested) {
+      return;
+    }
+
+    if (message?.type === "error") {
+      sessionStorage.removeItem(RESEND_REQUESTED_STORAGE_KEY);
       return;
     }
 
