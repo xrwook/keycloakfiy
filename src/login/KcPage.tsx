@@ -97,7 +97,7 @@ export default function KcPage(props: { kcContext: KcContext }) {
               <LoginIdpLinkConfirm
                 {...{ kcContext, i18n, classes }}
                 Template={Template}
-                doUseDefaultCss={true}
+                doUseDefaultCss={false}
               />
             );
           case "idp-review-user-profile.ftl":

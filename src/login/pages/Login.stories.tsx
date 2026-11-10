@@ -16,6 +16,25 @@ export const Default: Story = {
   render: () => <KcPageStory />
 };
 
+// 기존 계정에 SSO를 연결하기 위해 로그인 인증을 요청하는 상태.
+export const WithSsoAccountLinkVerification: Story = {
+  name: "SSO 계정 연동 인증",
+  render: () => (
+    <KcPageStory
+      kcContext={{
+        registrationDisabled: true,
+        login: {
+          username: "test-user@example.com"
+        },
+        message: {
+          type: "info",
+          summary: "hmg-sso와 계정을 연결하려면 인증하세요"
+        }
+      }}
+    />
+  )
+};
+
 export const WithInvalidCredential: Story = {
   render: () => (
     <KcPageStory
